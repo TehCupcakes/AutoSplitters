@@ -16,8 +16,8 @@ startup
 	settings.Add("autostart", true, "Auto-start when starting a new file.");
 	settings.Add("split_phase", true, "Split after destruction cutscene.");
 	settings.Add("split_orb1", true, "Split on collecting blue orb.");
-	settings.Add("split_orb2", true, "Split on collecting red orb.");
-	settings.Add("split_orb3", true, "Split on collecting green orb.");
+	settings.Add("split_orb2", true, "Split on collecting pink orb.");
+	settings.Add("split_orb3", true, "Split on collecting yellow orb.");
 	settings.Add("split_demonblade", true, "Split on collecting demon blade.");
 
 	Action<string> DebugOutput = (text) => {
