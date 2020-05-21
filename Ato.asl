@@ -3,7 +3,6 @@ state("Ato", "v1.0")
 	int room : 0x006C2DB8;
 	double gameTimer : 0x004A1164, 0x00, 0x2C, 0x10, 0x120, 0x80;
 	double phase : 0x004A1164, 0x00, 0x2C, 0x10, 0x120, 0x60;
-	double crystalBreak : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04, 0x430;
 	double orb1 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x00;
 	double orb2 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x10;
 	double orb3 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x20;
@@ -16,12 +15,12 @@ startup
 	settings.Add("autostart", true, "Auto-start when starting a new file.");
 	
 	settings.Add("progression_splits", true, "Progression Splits");
-	settings.Add("boss_splits", false, "Boss Splits");
+	settings.Add("boss_splits", false, "Boss Splits (Excluding final boss)");
+	settings.Add("scroll_splits", false, "Scroll Splits");
 	// settings.Add("misc_splits", false, "Misc. Splits");
 
 	settings.CurrentDefaultParent = "progression_splits";
 	settings.Add("split_phase", true, "Split after destruction cutscene.");
-	settings.Add("split_crystal", true, "Split after destroying first crystal block.");
 	settings.Add("split_orb1", true, "Split on collecting blue orb.");
 	settings.Add("split_orb2", true, "Split on collecting pink orb.");
 	settings.Add("split_orb3", true, "Split on collecting yellow orb.");
@@ -63,13 +62,28 @@ startup
 	settings.Add("boss_31", true, "Demon");
 	settings.Add("boss_owl", true, "Owl");
 	
+	settings.CurrentDefaultParent = "scroll_splits";
+	settings.Add("dash_count", true, "Dash (+2 Upgrades)");
+	settings.Add("double_jump", true, "Double Jump");
+	settings.Add("speed_charge", true, "Speed Charge");
+	settings.Add("dodge", true, "Dodge (+Upgrade)");
+	settings.Add("vision", true, "Vision");
+	settings.Add("ewls", true, "Electric Wind Lethal Strike");
+	settings.Add("crystal", true, "Crystal Break");
+	settings.Add("spell_spin", true, "Spin Spell (+Upgrade)");
+	settings.Add("spell_throw", true, "Throw Spell (+Upgrade)");
+	settings.Add("spell_down", true, "Down Spell (+Upgrade)");
+	settings.Add("fatal_draw", true, "Fatal Draw (+Upgrade)");
+	settings.Add("triple_slash", true, "Triple Slash");
+	settings.Add("meditate", true, "Meditate");
+	settings.Add("parry", true, "Parry/Counter");
+	
 	/* TODO: Implement these
 	settings.CurrentDefaultParent = "misc_splits";
-	settings.Add("split_scroll", true, "Ability Scroll");
 	settings.Add("split_talisman", true, "Talismans");
 	settings.Add("split_coin", true, "Coins");
 	settings.Add("split_rune", true, "Runes");
-	settings.Add("split_magic", true, "Magic Bar");
+	settings.Add("split_magic", true, "Magic Bars");
 	*/
 
 	Action<string> DebugOutput = (text) => {
@@ -78,7 +92,7 @@ startup
 	vars.DebugOutput = DebugOutput;
 	
 	// Set up memory watchers for boss splits. Since they're sequential, it's easier to do in a loop than one by one.
-	vars.GetWatchers = (Func<Dictionary<string, MemoryWatcher>>)(() => {
+	vars.GetBossWatchers = (Func<Dictionary<string, MemoryWatcher>>)(() => {
 		var dict = new Dictionary<string, MemoryWatcher>();
 		for (int i = 0; i <= 31; i++)
 		{
@@ -88,6 +102,36 @@ startup
 		dict.Add("boss_owl", new MemoryWatcher<double>(new DeepPointer(0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04, 0x570)));
 		return dict;
 	});
+	vars.GetScrollWatchers = (Func<Dictionary<string, MemoryWatcher>>)(() => {
+		var dict = new Dictionary<string, MemoryWatcher>();
+		int[] abilityOffsets = new int[] {0x24, 0x08, 0x50, 0x14, 0x30, 0xA98, 0x00, 0x04, 0x04, 0x00};
+		var scrollOffsets = new Dictionary<string, int>()
+		{
+			{ "dash_count", 0x10 },
+			{ "double_jump", 0x20 },
+			{ "speed_charge", 0x40 },
+			{ "dodge", 0x70 },
+			{ "vision", 0x90 },
+			{ "ewls", 0xA0 },
+			{ "crystal", 0xB0 },
+			{ "spell_spin", 0x100 },
+			{ "spell_throw", 0x110 },
+			{ "spell_down", 0x120 },
+			{ "fatal_draw", 0x130 },
+			{ "triple_slash", 0x150 },
+			{ "meditate", 0x160 },
+			{ "parry", 0x170 }
+		};
+		foreach (KeyValuePair<string, int> kvp in scrollOffsets)
+		{
+			int[] currentOffsets = (int[])abilityOffsets.Clone();
+			currentOffsets[currentOffsets.Length - 1] += kvp.Value;
+			// vars.DebugOutput("All offsets: " + string.Join(", ", Array.ConvertAll(currentOffsets, off => off.ToString())));
+			var watcher = new MemoryWatcher<double>(new DeepPointer(0x004B38B4, currentOffsets));
+			dict.Add(kvp.Key, watcher);
+		}
+		return dict;
+	});
 	
 	// Keep track of total run based on game time. (Stored in milliseconds)
 	vars.savedTime = 0;
@@ -95,7 +139,6 @@ startup
 	// Important room numbers for splitting
 	vars.menuRoom = 5;
 	vars.introRoom = 6;
-	vars.finalBossRoom = 263;
 }
 
 init
@@ -113,8 +156,10 @@ init
 	}
 	vars.DebugOutput("INITIALIZED with version: " + version);
 	
-	vars.bossWatchers = vars.GetWatchers();
+	vars.bossWatchers = vars.GetBossWatchers();
 	vars.DebugOutput("Boss watcher count: " + vars.bossWatchers.Count.ToString());
+	vars.scrollWatchers = vars.GetScrollWatchers();
+	vars.DebugOutput("Scroll watcher count: " + vars.scrollWatchers.Count.ToString());
 }
 
 exit
@@ -135,6 +180,10 @@ update
 	}
 	
 	foreach (var currentWatcher in vars.bossWatchers)
+	{
+		currentWatcher.Value.Update(game);
+	}
+	foreach (var currentWatcher in vars.scrollWatchers)
 	{
 		currentWatcher.Value.Update(game);
 	}
@@ -164,12 +213,6 @@ split
 		return true;
 	}
 	
-	if (settings["split_crystal"] && current.crystalBreak == 1 && old.crystalBreak == 0)
-	{
-		vars.DebugOutput("Crystal break split.");
-		return true;
-	}
-	
 	// Split on orb collection if relevant setting is on.
 	if ((settings["split_orb1"] && current.orb1 == 1 && old.orb1 == 0) ||
 		(settings["split_orb2"] && current.orb2 == 1 && old.orb2 == 0) ||
@@ -187,7 +230,7 @@ split
 	}
 
 	// Split on game finish. Only works if this is the first time the game has been won with the current save file.
-	if (settings["split_rebirth"] && current.room == vars.finalBossRoom && current.win == 1 && old.win == 0)
+	if (settings["split_rebirth"] && current.win == 1 && old.win == 0)
 	{
 		vars.DebugOutput("Game finish split.");
 		return true;
@@ -201,6 +244,18 @@ split
 		if (settings[kvp.Key] && oldVal == 0 && currentVal > 0)
 		{
 			vars.DebugOutput("Boss kill " + kvp.Key + " split.");
+			return true;
+		}
+	}
+	
+	// Split on each scroll obtained if the appropriate setting is activated
+	foreach (KeyValuePair<string, MemoryWatcher> kvp in vars.scrollWatchers)
+	{
+		double oldVal = kvp.Value.Old == null ? 0d : (double)kvp.Value.Old;
+		double currentVal = kvp.Value.Current == null ? 0d : (double)kvp.Value.Current;
+		if (settings[kvp.Key] && currentVal > oldVal)
+		{
+			vars.DebugOutput("Obtained scroll " + kvp.Key + " split.");
 			return true;
 		}
 	}
