@@ -1,4 +1,5 @@
-state("Ato", "v1.0")
+// Latest version should always be at top of file so it is default!
+state("Ato", "1.0.2.0")
 {
 	int room : 0x006C2DB8;
 	double gameTimer : 0x004A1164, 0x00, 0x2C, 0x10, 0x120, 0x80;
@@ -6,12 +7,48 @@ state("Ato", "v1.0")
 	double orb1 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x00;
 	double orb2 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x10;
 	double orb3 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x20;
-	double demonblade : 0x004B38B4, 0x24, 0x08, 0x50, 0x14, 0x30, 0xA98, 0x00, 0x04, 0x04, 0x1E0;
+	double win : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04, 0x200;
+}
+state("Ato", "1.0.1.0")
+{
+	int room : 0x006C2DB8;
+	double gameTimer : 0x004A1164, 0x00, 0x2C, 0x10, 0x120, 0x80;
+	double phase : 0x004A1164, 0x00, 0x2C, 0x10, 0x120, 0x60;
+	double orb1 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x00;
+	double orb2 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x10;
+	double orb3 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x20;
 	double win : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04, 0x200;
 }
 
 startup
 {
+	Action<string> DebugOutput = (text) => {
+		print("[Autosplitter] "+text);
+	};
+	vars.DebugOutput = DebugOutput;
+
+	// ARRAY/LIST POINTERS
+	// We'd have to put each individual value in state to set these up. To allow us to increment
+	// the offset and add all the ones we need programatically, we set these in startup instead.
+	int[] abilityOffsets;
+	int[] achievementOffsets;
+	int[] runeOffsets;
+	switch(version)
+	{
+		case "1.0.1.0":
+			abilityOffsets = new int[] {0x004B38B4, 0x24, 0x08, 0x50, 0x14, 0x30, 0xA98, 0x00, 0x04, 0x04};
+			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04};
+			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x0C};
+			break;
+		case "1.0.2.0":
+		default:
+			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x20, 0x14};
+			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04};
+			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xC3C, 0x00, 0x04, 0x04};
+			break;
+	}
+
+	// SETTINGS
 	settings.Add("autostart", true, "Auto-start when starting a new file.");
 	
 	settings.Add("progression_splits", true, "Progression Splits");
@@ -85,26 +122,37 @@ startup
 	settings.Add("split_rune", true, "Runes");
 	settings.Add("split_magic", true, "Magic Bars");
 	*/
-
-	Action<string> DebugOutput = (text) => {
-		print("[Autosplitter] "+text);
-	};
-	vars.DebugOutput = DebugOutput;
 	
+	// POINTER WATCHERS
 	// Set up memory watchers for boss splits. Since they're sequential, it's easier to do in a loop than one by one.
+	vars.GetDemonbladeWatcher = (Func<MemoryWatcher>)(() => {
+		var baseOffset = abilityOffsets[0];
+		int[] demonbladeOffsets = new int[abilityOffsets.Length];
+		Array.Copy(abilityOffsets, 1, demonbladeOffsets, 0, abilityOffsets.Length - 1);
+		demonbladeOffsets[demonbladeOffsets.Length - 1] = 0x1E0;
+		return new MemoryWatcher<double>(new DeepPointer(baseOffset, demonbladeOffsets));
+	});
 	vars.GetBossWatchers = (Func<Dictionary<string, MemoryWatcher>>)(() => {
 		var dict = new Dictionary<string, MemoryWatcher>();
+		var baseOffset = achievementOffsets[0];
 		for (int i = 0; i <= 31; i++)
 		{
-			var watcher = new MemoryWatcher<double>(new DeepPointer(0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04, (0x10 * i)));
+			// Copy the offsets minus the first one and append the offset for the individual ability
+			int[] currentOffsets = new int[achievementOffsets.Length];
+			Array.Copy(achievementOffsets, 1, currentOffsets, 0, achievementOffsets.Length - 1);
+			currentOffsets[currentOffsets.Length - 1] = 0x10 * i;
+			
+			var watcher = new MemoryWatcher<double>(new DeepPointer(baseOffset, currentOffsets));
 			dict.Add("boss_" + i.ToString(), watcher);
 		}
-		dict.Add("boss_owl", new MemoryWatcher<double>(new DeepPointer(0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04, 0x570)));
+		int[] owlOffsets = new int[achievementOffsets.Length];
+		Array.Copy(achievementOffsets, 1, owlOffsets, 0, achievementOffsets.Length - 1);
+		owlOffsets[owlOffsets.Length - 1] = 0x570;
+		dict.Add("boss_owl", new MemoryWatcher<double>(new DeepPointer(baseOffset, owlOffsets)));
 		return dict;
 	});
 	vars.GetScrollWatchers = (Func<Dictionary<string, MemoryWatcher>>)(() => {
 		var dict = new Dictionary<string, MemoryWatcher>();
-		int[] abilityOffsets = new int[] {0x24, 0x08, 0x50, 0x14, 0x30, 0xA98, 0x00, 0x04, 0x04, 0x00};
 		var scrollOffsets = new Dictionary<string, int>()
 		{
 			{ "dash_count", 0x10 },
@@ -122,12 +170,16 @@ startup
 			{ "meditate", 0x160 },
 			{ "parry", 0x170 }
 		};
+		var baseOffset = abilityOffsets[0];
 		foreach (KeyValuePair<string, int> kvp in scrollOffsets)
 		{
-			int[] currentOffsets = (int[])abilityOffsets.Clone();
-			currentOffsets[currentOffsets.Length - 1] += kvp.Value;
+			// Copy the offsets minus the first one and append the offset for the individual ability
+			int[] currentOffsets = new int[abilityOffsets.Length];
+			Array.Copy(abilityOffsets, 1, currentOffsets, 0, abilityOffsets.Length - 1);
+			currentOffsets[currentOffsets.Length - 1] = kvp.Value;
+			
 			// vars.DebugOutput("All offsets: " + string.Join(", ", Array.ConvertAll(currentOffsets, off => off.ToString())));
-			var watcher = new MemoryWatcher<double>(new DeepPointer(0x004B38B4, currentOffsets));
+			var watcher = new MemoryWatcher<double>(new DeepPointer(baseOffset, currentOffsets));
 			dict.Add(kvp.Key, watcher);
 		}
 		return dict;
@@ -145,10 +197,11 @@ init
 {
 	int moduleSize = modules.First().ModuleMemorySize;
 	vars.DebugOutput("Size: " + moduleSize);
+	// So far Ato's module size is the same regardless of version
 	if (moduleSize == 7593984)
 	{
-		// Note: Subsequent patches may be the same size, so assume this is v1.0+ until module size changes
-		version = "v1.0";
+		// looks like "1.0.2.0"
+		version = modules.First().FileVersionInfo.ProductVersion;
 	}
 	else
 	{
@@ -160,6 +213,7 @@ init
 	vars.DebugOutput("Boss watcher count: " + vars.bossWatchers.Count.ToString());
 	vars.scrollWatchers = vars.GetScrollWatchers();
 	vars.DebugOutput("Scroll watcher count: " + vars.scrollWatchers.Count.ToString());
+	vars.demonbladeWatcher = vars.GetDemonbladeWatcher();
 }
 
 exit
@@ -179,6 +233,7 @@ update
 		vars.savedTime = 0;
 	}
 	
+	vars.demonbladeWatcher.Update(game);
 	foreach (var currentWatcher in vars.bossWatchers)
 	{
 		currentWatcher.Value.Update(game);
@@ -223,7 +278,7 @@ split
 	}
 	
 	// Split on demonblade collection if relevant setting is on.
-	if (settings["split_demonblade"] && current.demonblade == 1 && old.demonblade == 0)
+	if (settings["split_demonblade"] && vars.demonbladeWatcher.Current == 1 && vars.demonbladeWatcher.Old == 0)
 	{
 		vars.DebugOutput("Demonblade collected split.");
 		return true;
