@@ -57,6 +57,7 @@ startup
 			break;
 		case "1.0.3.0":
 		case "1.0.4.0":
+		case "1.0.5.0":
 		default:
 			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x20, 0x14};
 			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04};
@@ -70,6 +71,7 @@ startup
 	settings.Add("progression_splits", true, "Progression Splits");
 	settings.Add("boss_splits", false, "Boss Splits (Excluding final boss)");
 	settings.Add("scroll_splits", false, "Scroll Splits");
+	settings.Add("arena_splits", false, "Arena Splits");
 	// settings.Add("misc_splits", false, "Misc. Splits");
 
 	settings.CurrentDefaultParent = "progression_splits";
@@ -131,6 +133,12 @@ startup
 	settings.Add("meditate", true, "Meditate");
 	settings.Add("parry", true, "Parry/Counter");
 	
+	settings.CurrentDefaultParent = "arena_splits";
+	settings.Add("arena_0", true, "Spin Arena");
+	settings.Add("arena_1", true, "Armor Arena");
+	settings.Add("arena_2", true, "Throw Arena");
+	settings.Add("arena_3", true, "Fatal Arena");
+	 
 	/* TODO: Implement these
 	settings.CurrentDefaultParent = "misc_splits";
 	settings.Add("split_talisman", true, "Talismans");
@@ -163,8 +171,23 @@ startup
 		}
 		int[] owlOffsets = new int[achievementOffsets.Length];
 		Array.Copy(achievementOffsets, 1, owlOffsets, 0, achievementOffsets.Length - 1);
-		owlOffsets[owlOffsets.Length - 1] = 0x570;
+		owlOffsets[owlOffsets.Length - 1] = 0x580;
 		dict.Add("boss_owl", new MemoryWatcher<double>(new DeepPointer(baseOffset, owlOffsets)));
+		return dict;
+	});
+	vars.GetArenaWatchers = (Func<Dictionary<string, MemoryWatcher>>)(() => {
+		var dict = new Dictionary<string, MemoryWatcher>();
+		var baseOffset = achievementOffsets[0];
+		for (int i = 0; i <= 3; i++)
+		{
+			// Copy the offsets minus the first one and append the offset for the individual achievement
+			int[] currentOffsets = new int[achievementOffsets.Length];
+			Array.Copy(achievementOffsets, 1, currentOffsets, 0, achievementOffsets.Length - 1);
+			currentOffsets[currentOffsets.Length - 1] = 0x210 + 0x10 * i;
+			
+			var watcher = new MemoryWatcher<double>(new DeepPointer(baseOffset, currentOffsets));
+			dict.Add("arena_" + i.ToString(), watcher);
+		}
 		return dict;
 	});
 	vars.GetScrollWatchers = (Func<Dictionary<string, MemoryWatcher>>)(() => {
@@ -227,6 +250,8 @@ init
 	
 	vars.bossWatchers = vars.GetBossWatchers();
 	vars.DebugOutput("Boss watcher count: " + vars.bossWatchers.Count.ToString());
+	vars.arenaWatchers = vars.GetArenaWatchers();
+	vars.DebugOutput("Arena watcher count: " + vars.arenaWatchers.Count.ToString());
 	vars.scrollWatchers = vars.GetScrollWatchers();
 	vars.DebugOutput("Scroll watcher count: " + vars.scrollWatchers.Count.ToString());
 	vars.demonbladeWatcher = vars.GetDemonbladeWatcher();
@@ -251,6 +276,10 @@ update
 	
 	vars.demonbladeWatcher.Update(game);
 	foreach (var currentWatcher in vars.bossWatchers)
+	{
+		currentWatcher.Value.Update(game);
+	}
+	foreach (var currentWatcher in vars.arenaWatchers)
 	{
 		currentWatcher.Value.Update(game);
 	}
