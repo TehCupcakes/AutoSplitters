@@ -1,4 +1,59 @@
 // Latest version should always be at top of file so it is default!
+state("Ato", "1.0.6.0")
+{
+	int room : 0x006C2DB8;
+	double gameTimer : 0x004B2780, 0x2C, 0x10, 0x120, 0x50;
+	double phase : 0x004B2780, 0x2C, 0x10, 0x120, 0x40;
+	double orb1 : 0x004B2780, 0x2C, 0x10, 0x120, 0x10, 0x44, 0x04, 0x00;
+	double orb2 : 0x004B2780, 0x2C, 0x10, 0x120, 0x10, 0x44, 0x04, 0x10;
+	double orb3 : 0x004B2780, 0x2C, 0x10, 0x120, 0x10, 0x44, 0x04, 0x20;
+	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x10, 0x04, 0x04, 0x200;
+	double bossrush : 0x004B2780, 0x2C, 0x10, 0x108, 0xD0;
+}
+state("Ato", "1.0.5.1")
+{
+	int room : 0x006C2DB8;
+	double gameTimer : 0x004B2780, 0x2C, 0x10, 0x120, 0x50;
+	double phase : 0x004B2780, 0x2C, 0x10, 0x120, 0x30;
+	double orb1 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x00;
+	double orb2 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x10;
+	double orb3 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x20;
+	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04, 0x200;
+	double bossrush : 0x00;
+}
+state("Ato", "1.0.5.0")
+{
+	int room : 0x006C2DB8;
+	double gameTimer : 0x004B2780, 0x2C, 0x10, 0x120, 0x50;
+	double phase : 0x004B2780, 0x2C, 0x10, 0x120, 0x30;
+	double orb1 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x00;
+	double orb2 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x10;
+	double orb3 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x20;
+	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04, 0x200;
+	double bossrush : 0x00;
+}
+state("Ato", "1.0.4.1")
+{
+	int room : 0x006C2DB8;
+	double gameTimer : 0x004B2780, 0x2C, 0x10, 0x120, 0x50;
+	double phase : 0x004B2780, 0x2C, 0x10, 0x120, 0x30;
+	double orb1 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x00;
+	double orb2 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x10;
+	double orb3 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x20;
+	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04, 0x200;
+	double bossrush : 0x00;
+}
+state("Ato", "1.0.4.0")
+{
+	int room : 0x006C2DB8;
+	double gameTimer : 0x004B2780, 0x2C, 0x10, 0x120, 0x50;
+	double phase : 0x004B2780, 0x2C, 0x10, 0x120, 0x30;
+	double orb1 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x00;
+	double orb2 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x10;
+	double orb3 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x20;
+	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04, 0x200;
+	double bossrush : 0x00;
+}
 state("Ato", "1.0.3.0")
 {
 	int room : 0x006C2DB8;
@@ -8,6 +63,7 @@ state("Ato", "1.0.3.0")
 	double orb2 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x10;
 	double orb3 : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x44, 0x04, 0x20;
 	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04, 0x200;
+	double bossrush : 0x00;
 }
 state("Ato", "1.0.2.0")
 {
@@ -18,6 +74,7 @@ state("Ato", "1.0.2.0")
 	double orb2 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x10;
 	double orb3 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x20;
 	double win : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04, 0x200;
+	double bossrush : 0x00;
 }
 state("Ato", "1.0.1.0")
 {
@@ -28,6 +85,7 @@ state("Ato", "1.0.1.0")
 	double orb2 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x10;
 	double orb3 : 0x004B2780, 0x2C, 0x10, 0x888, 0x10, 0x44, 0x04, 0x20;
 	double win : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04, 0x200;
+	double bossrush : 0x00;
 }
 
 startup
@@ -57,11 +115,18 @@ startup
 			break;
 		case "1.0.3.0":
 		case "1.0.4.0":
+		case "1.0.4.1":
 		case "1.0.5.0":
-		default:
+		case "1.0.5.1":
 			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x20, 0x14};
 			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04};
 			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x50, 0x04, 0x04};
+			break;
+		case "1.0.6.0":
+		default:
+			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x10, 0x14};
+			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xE04, 0x10, 0x04, 0x04};
+			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x60, 0x04, 0x04};
 			break;
 	}
 
@@ -72,7 +137,7 @@ startup
 	settings.Add("boss_splits", false, "Boss Splits (Excluding final boss)");
 	settings.Add("scroll_splits", false, "Scroll Splits");
 	settings.Add("arena_splits", false, "Arena Splits");
-	// settings.Add("misc_splits", false, "Misc. Splits");
+	settings.Add("misc_splits", true, "Misc. Splits");
 
 	settings.CurrentDefaultParent = "progression_splits";
 	settings.Add("split_phase", true, "Split after destruction cutscene.");
@@ -104,11 +169,11 @@ startup
 	settings.Add("boss_18", true, "Ancient Warrior");
 	settings.Add("boss_19", true, "Yari");
 	settings.Add("boss_20", true, "Deceiver");
-	settings.Add("boss_21", true, "Blameless");
-	settings.Add("boss_22", true, "Cross Blade");
-	settings.Add("boss_23", true, "Dagger Man");
-	settings.Add("boss_24", true, "Turtle");
-	settings.Add("boss_25", true, "Champ");
+	settings.Add("boss_21", false, "Blameless");
+	settings.Add("boss_22", false, "Cross Blade");
+	settings.Add("boss_23", false, "Dagger Man");
+	settings.Add("boss_24", false, "Turtle");
+	settings.Add("boss_25", false, "Champ");
 	settings.Add("boss_26", true, "Tiny Warrior");
 	settings.Add("boss_27", true, "Archer");
 	settings.Add("boss_28", true, "Tempest");
@@ -139,8 +204,10 @@ startup
 	settings.Add("arena_2", true, "Throw Arena");
 	settings.Add("arena_3", true, "Fatal Arena");
 	 
-	/* TODO: Implement these
 	settings.CurrentDefaultParent = "misc_splits";
+	settings.Add("boss_rush", true, "Boss Rush");
+	settings.SetToolTip("boss_rush", "Split after each room is defeated in Boss Rush mode.");
+	/* TODO: Implement these
 	settings.Add("split_talisman", true, "Talismans");
 	settings.Add("split_coin", true, "Coins");
 	settings.Add("split_rune", true, "Runes");
@@ -298,6 +365,18 @@ start
 	}
 }
 
+reset
+{
+	// Reset when starting boss rush because the run must restart if they were on the main menu
+	if (timer.CurrentPhase == TimerPhase.Running && current.bossrush == 1 && old.bossrush == 0)
+	{
+		vars.DebugOutput("Timer reset");
+		vars.savedTime = 0;
+		return true;
+	}
+	return false;
+}
+
 split
 {
 	// Don't split on main menu.
@@ -307,9 +386,18 @@ split
 	}
 
 	// This should happen at room 11 just after the main boss defeats you and takes your child
-	if (settings["split_phase"] && current.phase == 1 && old.phase == 0)
+	if (settings["split_phase"] && current.phase == 1 && old.phase == 0 && current.bossrush != 1)
 	{
 		vars.DebugOutput("Phase change split.");
+		return true;
+	}
+	
+	// Split on room change during boss rush.
+	if (settings["boss_rush"] && current.bossrush == 1 && current.room != old.room && current.room > vars.menuRoom)
+	{
+		vars.DebugOutput("Boss rush split.");
+		vars.DebugOutput("Old Room: " + old.room);
+		vars.DebugOutput("New Room: " + current.room);
 		return true;
 	}
 	
