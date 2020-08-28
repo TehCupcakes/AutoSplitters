@@ -1,4 +1,15 @@
 // Latest version should always be at top of file so it is default!
+state("Ato", "1.0.6.3")
+{
+	int room : 0x006C2DB8;
+	double gameTimer : 0x004B2780, 0x2C, 0x10, 0x120, 0x80;
+	double phase : 0x004B2780, 0x2C, 0x10, 0x120, 0x70;
+	double orb1 : 0x004B2780, 0x2C, 0x10, 0x120, 0x40, 0x44, 0x04, 0x00;
+	double orb2 : 0x004B2780, 0x2C, 0x10, 0x120, 0x40, 0x44, 0x04, 0x10;
+	double orb3 : 0x004B2780, 0x2C, 0x10, 0x120, 0x40, 0x44, 0x04, 0x20;
+	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x40, 0x04, 0x04, 0x200;
+	double bossrush : 0x004B2780, 0x2C, 0x10, 0x108, 0x6D0;
+}
 state("Ato", "1.0.6.0")
 {
 	int room : 0x006C2DB8;
@@ -123,10 +134,17 @@ startup
 			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x50, 0x04, 0x04};
 			break;
 		case "1.0.6.0":
-		default:
+		case "1.0.6.1":
+		case "1.0.6.2":
 			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x10, 0x14};
 			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xE04, 0x10, 0x04, 0x04};
 			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x60, 0x04, 0x04};
+			break;
+		case "1.0.6.3":
+		default:
+			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x10, 0x14};
+			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xE04, 0x40, 0x04, 0x04};
+			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x90, 0x04, 0x04};
 			break;
 	}
 
@@ -358,7 +376,7 @@ update
 
 start
 {
-	if (settings["autostart"] && current.room >= vars.introRoom && old.room == vars.menuRoom && current.gameTimer == 0)
+	if (settings["autostart"] && current.room >= vars.introRoom && old.room == vars.menuRoom && (current.gameTimer == 0 || current.bossrush == 1))
 	{
 		vars.DebugOutput("Timer started");
 		return true;
@@ -368,11 +386,11 @@ start
 reset
 {
 	// Reset when starting boss rush because the run must restart if they were on the main menu
-	if (timer.CurrentPhase == TimerPhase.Running && current.bossrush == 1 && old.bossrush == 0)
+	if (current.bossrush == 1 && old.bossrush == 0 && vars.savedTime != 0)
 	{
 		vars.DebugOutput("Timer reset");
 		vars.savedTime = 0;
-		return true;
+		return timer.CurrentPhase == TimerPhase.Running;
 	}
 	return false;
 }
