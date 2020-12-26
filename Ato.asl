@@ -1,4 +1,15 @@
 // Latest version should always be at top of file so it is default!
+state("Ato", "1.0.6.7")
+{
+	int room : 0x006EFE10;
+	double gameTimer : 0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x70;
+	double phase : 0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x60;
+	double orb1 : 0x004E0AB0, 0xD0, 0x28, 0xD0, 0x58, 0x300;
+	double orb2 : 0x004E0AB0, 0xD0, 0x28, 0xD0, 0x58, 0x310;
+	double orb3 : 0x004E0AB0, 0xD0, 0x28, 0xD0, 0x58, 0x320;
+	double win : 0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0x6C, 0x200;
+	double bossrush : 0x004CE070, 0x00, 0x2C, 0x10, 0x54, 0x630;
+}
 state("Ato", "1.0.6.3")
 {
 	int room : 0x006C2DB8;
@@ -141,10 +152,19 @@ startup
 			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x60, 0x04, 0x04};
 			break;
 		case "1.0.6.3":
-		default:
+		case "1.0.6.4":
+		case "1.0.6.5":
+		case "1.0.6.6":
 			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x10, 0x14};
 			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xE04, 0x40, 0x04, 0x04};
 			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x90, 0x04, 0x04};
+			break;
+		case "1.0.6.7":
+		default:
+		
+			abilityOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x9E4, 0x00, 0x16C};
+			achievementOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0x6C};
+			runeOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0xEC};
 			break;
 	}
 
@@ -319,18 +339,8 @@ startup
 
 init
 {
-	int moduleSize = modules.First().ModuleMemorySize;
-	vars.DebugOutput("Size: " + moduleSize);
-	// So far Ato's module size is the same regardless of version
-	if (moduleSize == 7593984)
-	{
-		// looks like "1.0.2.0"
-		version = modules.First().FileVersionInfo.ProductVersion;
-	}
-	else
-	{
-		return;
-	}
+	// looks like "1.0.2.0"
+	version = modules.First().FileVersionInfo.ProductVersion;
 	vars.DebugOutput("INITIALIZED with version: " + version);
 	
 	vars.bossWatchers = vars.GetBossWatchers();
@@ -404,7 +414,7 @@ split
 	}
 
 	// This should happen at room 11 just after the main boss defeats you and takes your child
-	if (settings["split_phase"] && current.phase == 1 && old.phase == 0 && current.bossrush != 1)
+	if (settings["split_phase"] && current.phase == 1 && old.phase == 0 && current.bossrush == 0)
 	{
 		vars.DebugOutput("Phase change split.");
 		return true;
@@ -447,7 +457,7 @@ split
 	{
 		double oldVal = kvp.Value.Old == null ? 0d : (double)kvp.Value.Old;
 		double currentVal = kvp.Value.Current == null ? 0d : (double)kvp.Value.Current;
-		if (settings[kvp.Key] && oldVal == 0 && currentVal > 0)
+		if (settings[kvp.Key] && oldVal == 0 && currentVal > 0 && current.bossrush == 0)
 		{
 			vars.DebugOutput("Boss kill " + kvp.Key + " split.");
 			return true;
