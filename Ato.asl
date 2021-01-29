@@ -1,4 +1,15 @@
 // Latest version should always be at top of file so it is default!
+state("Ato", "1.0.6.8")
+{
+	int room : 0x006EFE10;
+	double gameTimer : 0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x70;
+	double phase : 0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x60;
+	double orb1 : 0x004E0AB0, 0xD0, 0x28, 0xD0, 0x58, 0x300;
+	double orb2 : 0x004E0AB0, 0xD0, 0x28, 0xD0, 0x58, 0x310;
+	double orb3 : 0x004E0AB0, 0xD0, 0x28, 0xD0, 0x58, 0x320;
+	double win : 0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0x6C, 0x200;
+	double bossrush : 0x004CE070, 0x00, 0x2C, 0x10, 0x54, 0x620;
+}
 state("Ato", "1.0.6.7")
 {
 	int room : 0x006EFE10;
@@ -160,8 +171,8 @@ startup
 			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x90, 0x04, 0x04};
 			break;
 		case "1.0.6.7":
+		case "1.0.6.8":
 		default:
-		
 			abilityOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x9E4, 0x00, 0x16C};
 			achievementOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0x6C};
 			runeOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0xEC};
@@ -248,9 +259,17 @@ startup
 	/* TODO: Implement these
 	settings.Add("split_talisman", true, "Talismans");
 	settings.Add("split_coin", true, "Coins");
-	settings.Add("split_rune", true, "Runes");
 	settings.Add("split_magic", true, "Magic Bars");
 	*/
+	settings.Add("rune_splits", false, "Runes");
+	
+	settings.CurrentDefaultParent = "rune_splits";
+	settings.Add("rune_0", true, "Echo");
+	settings.Add("rune_1", true, "Agility");
+	settings.Add("rune_2", true, "Mind");
+	settings.Add("rune_3", true, "Juggernaut");
+	settings.Add("rune_4", true, "Flurry");
+	settings.Add("rune_5", true, "Risk");
 	
 	// POINTER WATCHERS
 	// Set up memory watchers for boss splits. Since they're sequential, it's easier to do in a loop than one by one.
@@ -328,6 +347,21 @@ startup
 		}
 		return dict;
 	});
+	vars.GetRuneWatchers = (Func<Dictionary<string, MemoryWatcher>>)(() => {
+		var dict = new Dictionary<string, MemoryWatcher>();
+		var baseOffset = runeOffsets[0];
+		for (int i = 0; i <= 5; i++)
+		{
+			// Copy the offsets minus the first one and append the offset for the individual achievement
+			int[] currentOffsets = new int[runeOffsets.Length];
+			Array.Copy(runeOffsets, 1, currentOffsets, 0, runeOffsets.Length - 1);
+			currentOffsets[currentOffsets.Length - 1] = 0x10 + 0x10 * i;
+			
+			var watcher = new MemoryWatcher<double>(new DeepPointer(baseOffset, currentOffsets));
+			dict.Add("rune_" + i.ToString(), watcher);
+		}
+		return dict;
+	});
 	
 	// Keep track of total run based on game time. (Stored in milliseconds)
 	vars.savedTime = 0;
@@ -349,6 +383,8 @@ init
 	vars.DebugOutput("Arena watcher count: " + vars.arenaWatchers.Count.ToString());
 	vars.scrollWatchers = vars.GetScrollWatchers();
 	vars.DebugOutput("Scroll watcher count: " + vars.scrollWatchers.Count.ToString());
+	vars.runeWatchers = vars.GetRuneWatchers();
+	vars.DebugOutput("Rune watcher count: " + vars.runeWatchers.Count.ToString());
 	vars.demonbladeWatcher = vars.GetDemonbladeWatcher();
 }
 
@@ -382,11 +418,15 @@ update
 	{
 		currentWatcher.Value.Update(game);
 	}
+	foreach (var currentWatcher in vars.runeWatchers)
+	{
+		currentWatcher.Value.Update(game);
+	}
 }
 
 start
 {
-	if (settings["autostart"] && current.room >= vars.introRoom && old.room == vars.menuRoom && (current.gameTimer == 0 || current.bossrush == 1))
+	if (settings["autostart"] && current.room >= vars.introRoom && old.room == vars.menuRoom && (current.gameTimer <= 1 || current.bossrush == 1))
 	{
 		vars.DebugOutput("Timer started");
 		return true;
@@ -472,6 +512,18 @@ split
 		if (settings[kvp.Key] && currentVal > oldVal)
 		{
 			vars.DebugOutput("Obtained scroll " + kvp.Key + " split.");
+			return true;
+		}
+	}
+	
+	// Split on each rune obtained if the appropriate setting is activated
+	foreach (KeyValuePair<string, MemoryWatcher> kvp in vars.runeWatchers)
+	{
+		double oldVal = kvp.Value.Old == null ? 0d : (double)kvp.Value.Old;
+		double currentVal = kvp.Value.Current == null ? 0d : (double)kvp.Value.Current;
+		if (settings[kvp.Key] && currentVal > oldVal)
+		{
+			vars.DebugOutput("Obtained rune " + kvp.Key + " split.");
 			return true;
 		}
 	}
