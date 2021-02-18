@@ -1,4 +1,15 @@
 // Latest version should always be at top of file so it is default!
+state("Ato", "1.0.6.10")
+{
+	int room : 0x006EFE10;
+	double gameTimer : 0x004E0AAC, 0x94, 0x10, 0x80, 0x570;
+	double phase : 0x004E0AAC, 0x94, 0x10, 0x80, 0x560;
+	double orb1 : 0x004E0AB0, 0xD8, 0x28, 0xD0, 0x18, 0x300;
+	double orb2 : 0x004E0AB0, 0xD8, 0x28, 0xD0, 0x18, 0x310;
+	double orb3 : 0x004E0AB0, 0xD8, 0x28, 0xD0, 0x18, 0x320;
+	double win : 0x004DF9A4, 0x2C, 0x10, 0x240, 0x20, 0x6C, 0x200;
+	double bossrush : 0x004E0AAC, 0x5C, 0x10, 0x2C, 0x10, 0x00, 0x980;
+}
 state("Ato", "1.0.6.9")
 {
 	int room : 0x006EFE10;
@@ -184,10 +195,15 @@ startup
 		case "1.0.6.7":
 		case "1.0.6.8":
 		case "1.0.6.9":
-		default:
 			abilityOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x9E4, 0x00, 0x16C};
 			achievementOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0x6C};
 			runeOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0xEC};
+			break;
+		default:
+		case "1.0.6.10":
+			abilityOffsets = new int[] {0x004E0AAC, 0x94, 0x10, 0x100, 0x440, 0x3EC};
+			achievementOffsets = new int[] {0x004DF9A4, 0x2C, 0x10, 0x240, 0x20, 0x6C};
+			runeOffsets = new int[] {0x004DF9A4, 0x2C, 0x10, 0x240, 0x20, 0xEC};
 			break;
 	}
 
@@ -198,6 +214,7 @@ startup
 	settings.Add("boss_splits", false, "Boss Splits (Excluding final boss)");
 	settings.Add("scroll_splits", false, "Scroll Splits");
 	settings.Add("arena_splits", false, "Arena Splits");
+	settings.Add("rune_splits", false, "Runes");
 	settings.Add("misc_splits", true, "Misc. Splits");
 
 	settings.CurrentDefaultParent = "progression_splits";
@@ -264,6 +281,14 @@ startup
 	settings.Add("arena_1", true, "Armor Arena");
 	settings.Add("arena_2", true, "Throw Arena");
 	settings.Add("arena_3", true, "Fatal Arena");
+	
+	settings.CurrentDefaultParent = "rune_splits";
+	settings.Add("rune_0", true, "Echo");
+	settings.Add("rune_1", true, "Agility");
+	settings.Add("rune_2", true, "Mind");
+	settings.Add("rune_3", true, "Juggernaut");
+	settings.Add("rune_4", true, "Flurry");
+	settings.Add("rune_5", true, "Risk");
 	 
 	settings.CurrentDefaultParent = "misc_splits";
 	settings.Add("boss_rush", true, "Boss Rush");
@@ -273,15 +298,6 @@ startup
 	settings.Add("split_coin", true, "Coins");
 	settings.Add("split_magic", true, "Magic Bars");
 	*/
-	settings.Add("rune_splits", false, "Runes");
-	
-	settings.CurrentDefaultParent = "rune_splits";
-	settings.Add("rune_0", true, "Echo");
-	settings.Add("rune_1", true, "Agility");
-	settings.Add("rune_2", true, "Mind");
-	settings.Add("rune_3", true, "Juggernaut");
-	settings.Add("rune_4", true, "Flurry");
-	settings.Add("rune_5", true, "Risk");
 	
 	// POINTER WATCHERS
 	// Set up memory watchers for boss splits. Since they're sequential, it's easier to do in a loop than one by one.
