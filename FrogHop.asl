@@ -1,3 +1,18 @@
+// Latest version should always be at top of file so it is default!
+state("Frog Hop", "2.0.0.0")
+{
+	int room : 0x006EFE10;
+	double gameTimer : 0x004CE070, 0x00, 0x2C, 0x10, 0xC24, 0x00;
+	double isPaused : 0x004E0AB0, 0x3F0, 0x50, 0x2C, 0x10, 0x00, 0x0450;
+	double levelComplete : 0x004E0AB0, 0x504, 0x30, 0x2C, 0x10, 0x00, 0x370;
+	double gemCount : 0x004E0AB0, 0x504, 0x30, 0x2C, 0x10, 0x00, 0x430;
+	double gem1 : 0x006FCAF8, 0x828, 0x6C, 0x00;
+	double gem2 : 0x006FCAF8, 0x828, 0x6C, 0x10;
+	double gem3 : 0x006FCAF8, 0x828, 0x6C, 0x20;
+	double gem4 : 0x006FCAF8, 0x828, 0x6C, 0x30;
+	double gem5 : 0x006FCAF8, 0x828, 0x6C, 0x40;
+}
+
 state("Frog Hop", "v1.03")
 {
 	int room : 0x00617EA0;
@@ -94,6 +109,11 @@ init
 	if (moduleSize == 6631424)
 	{
 		version = "v1.03";
+	}
+	else if (moduleSize == 7446528)
+	{
+		// looks like "2.0.0.0"
+		version = modules.First().FileVersionInfo.ProductVersion;
 	}
 	vars.DebugOutput("INITIALIZED with version: " + version);
 }
