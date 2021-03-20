@@ -474,8 +474,10 @@ start
 {
 	if (settings["autostart"] && current.room >= vars.introRoom && old.room == vars.menuRoom)
 	{
+		// Seems to be a race condition where the game might render a few frames before this is hit. For that reason,
+		// gameTimer isn't guaranteed to be 0. Checking for < 60 gives it a full second of slop so we shouldn't have problems.
 		vars.DebugOutput("Game Timer: " + current.gameTimer.ToString());
-		if (current.gameTimer <= 2 || current.bossrush == 1)
+		if (current.gameTimer < 60 || current.bossrush == 1)
 		{
 			vars.DebugOutput("Timer started");
 			return true;
