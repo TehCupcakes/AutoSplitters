@@ -621,7 +621,7 @@ gameTime
 	double oldMs = old.gameTimer * (1000d / 60d);
 	if (ms > oldMs)
 	{
-		vars.savedTime += ms - oldMs;
+		vars.savedTime = ms;
 	}
 
 	// Game display rounds up to the nearest hundredth, although a frame is much longer
