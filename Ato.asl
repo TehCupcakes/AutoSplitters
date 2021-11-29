@@ -223,80 +223,6 @@ startup
 	};
 	vars.DebugOutput = DebugOutput;
 
-	// ARRAY/LIST POINTERS
-	// We'd have to put each individual value in state to set these up. To allow us to increment
-	// the offset and add all the ones we need programatically, we set these in startup instead.
-	int[] abilityOffsets;
-	int[] achievementOffsets;
-	int[] runeOffsets;
-	switch(version)
-	{
-		case "1.0.1.0":
-			abilityOffsets = new int[] {0x004B38B4, 0x24, 0x08, 0x50, 0x14, 0x30, 0xA98, 0x00, 0x04, 0x04};
-			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04};
-			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x0C};
-			break;
-		case "1.0.2.0":
-			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x20, 0x14};
-			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04};
-			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xC3C, 0x00, 0x04, 0x04};
-			break;
-		case "1.0.3.0":
-		case "1.0.4.0":
-		case "1.0.4.1":
-		case "1.0.5.0":
-		case "1.0.5.1":
-			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x20, 0x14};
-			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04};
-			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x50, 0x04, 0x04};
-			break;
-		case "1.0.6.0":
-		case "1.0.6.1":
-		case "1.0.6.2":
-			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x10, 0x14};
-			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xE04, 0x10, 0x04, 0x04};
-			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x60, 0x04, 0x04};
-			break;
-		case "1.0.6.3":
-		case "1.0.6.4":
-		case "1.0.6.5":
-		case "1.0.6.6":
-			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x10, 0x14};
-			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xE04, 0x40, 0x04, 0x04};
-			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x90, 0x04, 0x04};
-			break;
-		case "1.0.6.7":
-		case "1.0.6.8":
-		case "1.0.6.9":
-			abilityOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x9E4, 0x00, 0x16C};
-			achievementOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0x6C};
-			runeOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0xEC};
-			break;
-		case "1.0.6.10":
-			abilityOffsets = new int[] {0x004E0AAC, 0x94, 0x10, 0x100, 0x440, 0x3EC};
-			achievementOffsets = new int[] {0x004DF9A4, 0x2C, 0x10, 0x240, 0x20, 0x6C};
-			runeOffsets = new int[] {0x004DF9A4, 0x2C, 0x10, 0x240, 0x20, 0xEC};
-			break;
-		case "1.0.6.11":
-			abilityOffsets = new int[] {0x004E6A68, 0x2C, 0x10, 0x9F0, 0x30, 0x6C};
-			achievementOffsets = new int[] {0x004E6A68, 0x2C, 0x10, 0x240, 0x00, 0xEC};
-			runeOffsets = new int[] {0x004E6A68, 0x2C, 0x10, 0x240, 0x20, 0xEC};
-			break;
-		case "1.0.7.0":
-		case "1.0.7.1":
-		case "1.0.7.2":
-			abilityOffsets = new int[] {0x0050AE10, 0x2C, 0x10, 0x480, 0x70, 0x6C};
-			achievementOffsets = new int[] {0x0050AE10, 0x2C, 0x10, 0xA8, 0x70, 0x6C};
-			runeOffsets = new int[] {0x0050AE10, 0x2C, 0x10, 0xA8, 0xA0, 0x6C};
-			break;
-		default:
-		case "1.0.8.0":
-			abilityOffsets = new int[] {0x00511D80, 0x2C, 0x10, 0x480, 0x70, 0x6C};
-			achievementOffsets = new int[] {0x00511D80, 0x2C, 0x10, 0xA8, 0x70, 0x6C};
-			runeOffsets = new int[] {0x00511D80, 0x2C, 0x10, 0xA8, 0xA0, 0x6C};
-			break;
-	}
-
 	// SETTINGS
 	settings.Add("autostart", true, "Auto-start when starting a new file.");
 	
@@ -391,14 +317,14 @@ startup
 	
 	// POINTER WATCHERS
 	// Set up memory watchers for boss splits. Since they're sequential, it's easier to do in a loop than one by one.
-	vars.GetDemonbladeWatcher = (Func<MemoryWatcher>)(() => {
+	vars.GetDemonbladeWatcher = (Func<int[], MemoryWatcher>)((int[] abilityOffsets) => {
 		var baseOffset = abilityOffsets[0];
 		int[] demonbladeOffsets = new int[abilityOffsets.Length];
 		Array.Copy(abilityOffsets, 1, demonbladeOffsets, 0, abilityOffsets.Length - 1);
 		demonbladeOffsets[demonbladeOffsets.Length - 1] = 0x1E0;
 		return new MemoryWatcher<double>(new DeepPointer(baseOffset, demonbladeOffsets));
 	});
-	vars.GetBossWatchers = (Func<Dictionary<string, MemoryWatcher>>)(() => {
+	vars.GetBossWatchers = (Func<int[], Dictionary<string, MemoryWatcher>>)((int[] achievementOffsets) => {
 		var dict = new Dictionary<string, MemoryWatcher>();
 		var baseOffset = achievementOffsets[0];
 		for (int i = 0; i <= 31; i++)
@@ -417,7 +343,7 @@ startup
 		dict.Add("boss_owl", new MemoryWatcher<double>(new DeepPointer(baseOffset, owlOffsets)));
 		return dict;
 	});
-	vars.GetArenaWatchers = (Func<Dictionary<string, MemoryWatcher>>)(() => {
+	vars.GetArenaWatchers = (Func<int[], Dictionary<string, MemoryWatcher>>)((int[] achievementOffsets) => {
 		var dict = new Dictionary<string, MemoryWatcher>();
 		var baseOffset = achievementOffsets[0];
 		for (int i = 0; i <= 3; i++)
@@ -432,7 +358,7 @@ startup
 		}
 		return dict;
 	});
-	vars.GetScrollWatchers = (Func<Dictionary<string, MemoryWatcher>>)(() => {
+	vars.GetScrollWatchers = (Func<int[], Dictionary<string, MemoryWatcher>>)((int[] abilityOffsets) => {
 		var dict = new Dictionary<string, MemoryWatcher>();
 		var scrollOffsets = new Dictionary<string, int>()
 		{
@@ -465,7 +391,7 @@ startup
 		}
 		return dict;
 	});
-	vars.GetRuneWatchers = (Func<Dictionary<string, MemoryWatcher>>)(() => {
+	vars.GetRuneWatchers = (Func<int[], Dictionary<string, MemoryWatcher>>)((int[] runeOffsets) => {
 		var dict = new Dictionary<string, MemoryWatcher>();
 		var baseOffset = runeOffsets[0];
 		for (int i = 0; i <= 5; i++)
@@ -495,15 +421,89 @@ init
 	version = modules.First().FileVersionInfo.ProductVersion;
 	vars.DebugOutput("INITIALIZED with version: " + version);
 	
-	vars.bossWatchers = vars.GetBossWatchers();
+	// ARRAY/LIST POINTERS
+	// We'd have to put each individual value in state to set these up. To allow us to increment
+	// the offset and add all the ones we need programatically, we set these in init instead.
+	int[] abilityOffsets;
+	int[] achievementOffsets;
+	int[] runeOffsets;
+	switch(version)
+	{
+		case "1.0.1.0":
+			abilityOffsets = new int[] {0x004B38B4, 0x24, 0x08, 0x50, 0x14, 0x30, 0xA98, 0x00, 0x04, 0x04};
+			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04};
+			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x0C};
+			break;
+		case "1.0.2.0":
+			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x20, 0x14};
+			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04};
+			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xC3C, 0x00, 0x04, 0x04};
+			break;
+		case "1.0.3.0":
+		case "1.0.4.0":
+		case "1.0.4.1":
+		case "1.0.5.0":
+		case "1.0.5.1":
+			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x20, 0x14};
+			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04};
+			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x50, 0x04, 0x04};
+			break;
+		case "1.0.6.0":
+		case "1.0.6.1":
+		case "1.0.6.2":
+			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x10, 0x14};
+			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xE04, 0x10, 0x04, 0x04};
+			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x60, 0x04, 0x04};
+			break;
+		case "1.0.6.3":
+		case "1.0.6.4":
+		case "1.0.6.5":
+		case "1.0.6.6":
+			abilityOffsets = new int[] {0x0048BBF4, 0x24, 0x2C, 0x270, 0x10, 0x14};
+			achievementOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0xE04, 0x40, 0x04, 0x04};
+			runeOffsets = new int[] {0x004B2780, 0x2C, 0x10, 0x69C, 0x90, 0x04, 0x04};
+			break;
+		case "1.0.6.7":
+		case "1.0.6.8":
+		case "1.0.6.9":
+			abilityOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x9E4, 0x00, 0x16C};
+			achievementOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0x6C};
+			runeOffsets = new int[] {0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0xEC};
+			break;
+		case "1.0.6.10":
+			abilityOffsets = new int[] {0x004E0AAC, 0x94, 0x10, 0x100, 0x440, 0x3EC};
+			achievementOffsets = new int[] {0x004DF9A4, 0x2C, 0x10, 0x240, 0x20, 0x6C};
+			runeOffsets = new int[] {0x004DF9A4, 0x2C, 0x10, 0x240, 0x20, 0xEC};
+			break;
+		case "1.0.6.11":
+			abilityOffsets = new int[] {0x004E6A68, 0x2C, 0x10, 0x9F0, 0x30, 0x6C};
+			achievementOffsets = new int[] {0x004E6A68, 0x2C, 0x10, 0x240, 0x00, 0xEC};
+			runeOffsets = new int[] {0x004E6A68, 0x2C, 0x10, 0x240, 0x20, 0xEC};
+			break;
+		case "1.0.7.0":
+		case "1.0.7.1":
+		case "1.0.7.2":
+			abilityOffsets = new int[] {0x0050AE10, 0x2C, 0x10, 0x480, 0x70, 0x6C};
+			achievementOffsets = new int[] {0x0050AE10, 0x2C, 0x10, 0xA8, 0x70, 0x6C};
+			runeOffsets = new int[] {0x0050AE10, 0x2C, 0x10, 0xA8, 0xA0, 0x6C};
+			break;
+		default:
+		case "1.0.8.0":
+			abilityOffsets = new int[] {0x00511D80, 0x2C, 0x10, 0x480, 0x70, 0x6C};
+			achievementOffsets = new int[] {0x00511D80, 0x2C, 0x10, 0xA8, 0x70, 0x6C};
+			runeOffsets = new int[] {0x00511D80, 0x2C, 0x10, 0xA8, 0xA0, 0x6C};
+			break;
+	}
+	
+	vars.bossWatchers = vars.GetBossWatchers(achievementOffsets);
 	vars.DebugOutput("Boss watcher count: " + vars.bossWatchers.Count.ToString());
-	vars.arenaWatchers = vars.GetArenaWatchers();
+	vars.arenaWatchers = vars.GetArenaWatchers(achievementOffsets);
 	vars.DebugOutput("Arena watcher count: " + vars.arenaWatchers.Count.ToString());
-	vars.scrollWatchers = vars.GetScrollWatchers();
+	vars.scrollWatchers = vars.GetScrollWatchers(abilityOffsets);
 	vars.DebugOutput("Scroll watcher count: " + vars.scrollWatchers.Count.ToString());
-	vars.runeWatchers = vars.GetRuneWatchers();
+	vars.runeWatchers = vars.GetRuneWatchers(runeOffsets);
 	vars.DebugOutput("Rune watcher count: " + vars.runeWatchers.Count.ToString());
-	vars.demonbladeWatcher = vars.GetDemonbladeWatcher();
+	vars.demonbladeWatcher = vars.GetDemonbladeWatcher(abilityOffsets);
 }
 
 exit
