@@ -1,4 +1,20 @@
 // Latest version should always be at top of file so it is default!
+state("Ato", "1.1.1.0")
+{
+	int room : 0x006F9C30;
+	double gameTimer : 0x00707918, 0x30, 0xC24, 0x190;
+	double difficulty : 0x00707918, 0x30, 0xC24, 0x200;
+	double phase : 0x00707918, 0x30, 0xC24, 0x180;
+	double orb1 : 0x00707918, 0x30, 0xC24, 0x1B0, 0x64, 0x00;
+	double orb2 : 0x00707918, 0x30, 0xC24, 0x1B0, 0x64, 0x10;
+	double orb3 : 0x00707918, 0x30, 0xC24, 0x1B0, 0x64, 0x20;
+	double win : 0x00707918, 0x30, 0xC24, 0x120, 0x64, 0x200;
+	double bossrush : 0x00707918, 0x30, 0x8C4, 0x50;
+	double grasscut : 0x00707918, 0x30, 0xC24, 0xF0;
+	double talismans : 0x00707918, 0x30, 0xC24, 0x220;
+	double maxMP : 0x00707918, 0x30, 0xC24, 0x230;
+	double coinCount : 0x00707918, 0x30, 0xC24, 0x270;
+}
 state("Ato", "1.1.0.0")
 {
 	int room : 0x006F9C30;
@@ -11,6 +27,9 @@ state("Ato", "1.1.0.0")
 	double win : 0x00707918, 0x30, 0xC24, 0x130, 0x64, 0x200;
 	double bossrush : 0x00707918, 0x30, 0x8C4, 0x30;
 	double grasscut : 0x00707918, 0x30, 0xC24, 0x100;
+	double talismans : 0x00707918, 0x30, 0xC24, 0x230;
+	double maxMP : 0x00707918, 0x30, 0xC24, 0x240;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.9.0")
 {
@@ -24,6 +43,9 @@ state("Ato", "1.0.9.0")
 	double win : 0x006FE860, 0x30, 0x12C, 0x100, 0x64, 0x200;
 	double bossrush : 0x006FE860, 0x30, 0xC60, 0x10;
 	double grasscut : 0x006FE860, 0x30, 0x12C, 0xD0;
+	double talismans : 0x006FE860, 0x30, 0x12C, 0x200;
+	double maxMP : 0x006FE860, 0x30, 0x12C, 0x210;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.8.0")
 {
@@ -37,6 +59,9 @@ state("Ato", "1.0.8.0")
 	double win : 0x00511D80, 0x2C, 0x10, 0xA8, 0x70, 0x6C, 0x200;
 	double bossrush : 0x00511D80, 0x2C, 0x10, 0x4308, 0x00;
 	double grasscut : 0x00;
+	double talismans : 0x00511D80, 0x2C, 0x10, 0xEE8, 0x410;
+	double maxMP : 0x00511D80, 0x2C, 0x10, 0xEE8, 0x420;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.7.2")
 {
@@ -50,6 +75,9 @@ state("Ato", "1.0.7.2")
 	double win : 0x0050AE10, 0x2C, 0x10, 0xA8, 0x70, 0x6C, 0x200;
 	double bossrush : 0x0050AE10, 0x2C, 0x10, 0x150, 0x100;
 	double grasscut : 0x00;
+	double talismans : 0x0050AE10, 0x2C, 0x10, 0xEE8, 0x410;
+	double maxMP : 0x0050AE10, 0x2C, 0x10, 0xEE8, 0x420;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.7.1")
 {
@@ -63,6 +91,9 @@ state("Ato", "1.0.7.1")
 	double win : 0x0050AE10, 0x2C, 0x10, 0xA8, 0x70, 0x6C, 0x200;
 	double bossrush : 0x0050AE10, 0x2C, 0x10, 0x150, 0x100;
 	double grasscut : 0x00;
+	double talismans : 0x0050AE10, 0x2C, 0x10, 0xEE8, 0x410;
+	double maxMP : 0x0050AE10, 0x2C, 0x10, 0xEE8, 0x420;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.7.0")
 {
@@ -76,6 +107,9 @@ state("Ato", "1.0.7.0")
 	double win : 0x0050AE10, 0x2C, 0x10, 0xA8, 0x70, 0x6C, 0x200;
 	double bossrush : 0x0050AE10, 0x2C, 0x10, 0x150, 0x100;
 	double grasscut : 0x00;
+	double talismans : 0x0050AE10, 0x2C, 0x10, 0xEE8, 0x410;
+	double maxMP : 0x0050AE10, 0x2C, 0x10, 0xEE8, 0x420;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.6.11")
 {
@@ -89,6 +123,9 @@ state("Ato", "1.0.6.11")
 	double win : 0x004E6A68, 0x2C, 0x10, 0x240, 0x00, 0xEC, 0x200;
 	double bossrush : 0x004E6A68, 0x2C, 0x10, 0x54, 0x730;
 	double grasscut : 0x00;
+	double talismans : 0x004E6A68, 0x2C, 0x10, 0x114, 0x520;
+	double maxMP : 0x004E6A68, 0x2C, 0x10, 0x114, 0x530;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.6.10")
 {
@@ -102,6 +139,9 @@ state("Ato", "1.0.6.10")
 	double win : 0x004DF9A4, 0x2C, 0x10, 0x240, 0x20, 0x6C, 0x200;
 	double bossrush : 0x004E0AAC, 0x5C, 0x10, 0x2C, 0x10, 0x00, 0x980;
 	double grasscut : 0x00;
+	double talismans : 0x004E0AAC, 0x94, 0x10, 0x80, 0x440;
+	double maxMP : 0x004E0AAC, 0x94, 0x10, 0x80, 0x450;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.6.9")
 {
@@ -115,6 +155,9 @@ state("Ato", "1.0.6.9")
 	double win : 0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0x6C, 0x200;
 	double bossrush : 0x004CE070, 0x00, 0x2C, 0x10, 0x330, 0x700;
 	double grasscut : 0x00;
+	double talismans : 0x00;
+	double maxMP : 0x00;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.6.8")
 {
@@ -128,6 +171,9 @@ state("Ato", "1.0.6.8")
 	double win : 0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0x6C, 0x200;
 	double bossrush : 0x004CE070, 0x00, 0x2C, 0x10, 0x54, 0x620;
 	double grasscut : 0x00;
+	double talismans : 0x00;
+	double maxMP : 0x00;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.6.7")
 {
@@ -141,6 +187,9 @@ state("Ato", "1.0.6.7")
 	double win : 0x004CE070, 0x00, 0x2C, 0x10, 0x90, 0x00, 0x6C, 0x200;
 	double bossrush : 0x004CE070, 0x00, 0x2C, 0x10, 0x54, 0x630;
 	double grasscut : 0x00;
+	double talismans : 0x00;
+	double maxMP : 0x00;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.6.3")
 {
@@ -154,6 +203,9 @@ state("Ato", "1.0.6.3")
 	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x40, 0x04, 0x04, 0x200;
 	double bossrush : 0x004B2780, 0x2C, 0x10, 0x108, 0x6D0;
 	double grasscut : 0x00;
+	double talismans : 0x00;
+	double maxMP : 0x00;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.6.0")
 {
@@ -167,6 +219,9 @@ state("Ato", "1.0.6.0")
 	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x10, 0x04, 0x04, 0x200;
 	double bossrush : 0x004B2780, 0x2C, 0x10, 0x108, 0xD0;
 	double grasscut : 0x00;
+	double talismans : 0x00;
+	double maxMP : 0x00;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.5.1")
 {
@@ -180,6 +235,9 @@ state("Ato", "1.0.5.1")
 	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04, 0x200;
 	double bossrush : 0x00;
 	double grasscut : 0x00;
+	double talismans : 0x00;
+	double maxMP : 0x00;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.5.0")
 {
@@ -193,6 +251,9 @@ state("Ato", "1.0.5.0")
 	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04, 0x200;
 	double bossrush : 0x00;
 	double grasscut : 0x00;
+	double talismans : 0x00;
+	double maxMP : 0x00;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.4.1")
 {
@@ -206,6 +267,9 @@ state("Ato", "1.0.4.1")
 	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04, 0x200;
 	double bossrush : 0x00;
 	double grasscut : 0x00;
+	double talismans : 0x00;
+	double maxMP : 0x00;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.4.0")
 {
@@ -219,6 +283,9 @@ state("Ato", "1.0.4.0")
 	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04, 0x200;
 	double bossrush : 0x00;
 	double grasscut : 0x00;
+	double talismans : 0x00;
+	double maxMP : 0x00;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.3.0")
 {
@@ -232,6 +299,9 @@ state("Ato", "1.0.3.0")
 	double win : 0x004B2780, 0x2C, 0x10, 0xE04, 0x00, 0x04, 0x04, 0x200;
 	double bossrush : 0x00;
 	double grasscut : 0x00;
+	double talismans : 0x00;
+	double maxMP : 0x00;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.2.0")
 {
@@ -245,6 +315,9 @@ state("Ato", "1.0.2.0")
 	double win : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04, 0x200;
 	double bossrush : 0x00;
 	double grasscut : 0x00;
+	double talismans : 0x00;
+	double maxMP : 0x00;
+	double coinCount : 0x00;
 }
 state("Ato", "1.0.1.0")
 {
@@ -258,6 +331,9 @@ state("Ato", "1.0.1.0")
 	double win : 0x004B2780, 0x2C, 0x10, 0x120, 0x00, 0x04, 0x04, 0x200;
 	double bossrush : 0x00;
 	double grasscut : 0x00;
+	double talismans : 0x00;
+	double maxMP : 0x00;
+	double coinCount : 0x00;
 }
 
 startup
@@ -355,11 +431,12 @@ startup
 	settings.SetToolTip("boss_rush", "Split after each room is defeated in Boss Rush mode.");
 	settings.Add("grass_percent", false, "Grass%");
 	settings.SetToolTip("grass_percent", "Split after cutting the final piece of grass in the game.");
-	/* TODO: Implement these
-	settings.Add("split_talisman", true, "Talismans");
-	settings.Add("split_coin", true, "Coins");
-	settings.Add("split_magic", true, "Magic Bars");
-	*/
+	settings.Add("split_talisman", false, "Talismans");
+	settings.SetToolTip("split_talisman", "Split after collecting each talisman piece.");
+	settings.Add("split_coin", false, "Coins");
+	settings.SetToolTip("split_coin", "Split after collecting each coin.");
+	settings.Add("split_magic", false, "Magic Bars");
+	settings.SetToolTip("split_magic", "Split after collecting each extra magic bar.");
 	
 	// POINTER WATCHERS
 	// Set up memory watchers for boss splits. Since they're sequential, it's easier to do in a loop than one by one.
@@ -544,10 +621,15 @@ init
 			runeOffsets = new int[] {0x006FE860, 0x30, 0x12C, 0x130, 0x64};
 			break;
 		case "1.1.0.0":
-		default:
 			abilityOffsets = new int[] {0x00707918, 0x30, 0xC24, 0x200, 0x64};
 			achievementOffsets = new int[] {0x00707918, 0x30, 0xC24, 0x130, 0x64};
 			runeOffsets = new int[] {0x00707918, 0x30, 0xC24, 0x160, 0x64};
+			break;
+		case "1.1.1.0":
+		default:
+			abilityOffsets = new int[] {0x00707918, 0x30, 0xC24, 0x1F0, 0x64};
+			achievementOffsets = new int[] {0x00707918, 0x30, 0xC24, 0x120, 0x64};
+			runeOffsets = new int[] {0x00707918, 0x30, 0xC24, 0x150, 0x64};
 			break;
 	}
 	
@@ -685,6 +767,27 @@ split
 	if (settings["grass_percent"] && current.grasscut >= 22137 && old.grasscut < 22137)
 	{
 		vars.DebugOutput("Grass% final split.");
+		return true;
+	}
+	
+	// Split on coins collected
+	if (settings["split_coin"] && current.coinCount > old.coinCount)
+	{
+		vars.DebugOutput("Coin collected split.");
+		return true;
+	}
+	
+	// Split on talismans collected
+	if (settings["split_talisman"] && current.talismans != old.talismans)
+	{
+		vars.DebugOutput("Talisman collected split.");
+		return true;
+	}
+	
+	// Split on magic collected
+	if (settings["split_magic"] && current.maxMP > old.maxMP && current.orb1 == old.orb1 && current.orb2 == old.orb2 && current.orb3 == old.orb3)
+	{
+		vars.DebugOutput("Magic bar collected split.");
 		return true;
 	}
 	
