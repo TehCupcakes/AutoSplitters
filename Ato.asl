@@ -882,6 +882,18 @@ split
 			return true;
 		}
 	}
+  
+  // Split on each arena complete if the appropriate setting is activated
+	foreach (KeyValuePair<string, MemoryWatcher> kvp in vars.arenaWatchers)
+	{
+		double oldVal = kvp.Value.Old == null ? 0d : (double)kvp.Value.Old;
+		double currentVal = kvp.Value.Current == null ? 0d : (double)kvp.Value.Current;
+		if (settings[kvp.Key] && oldVal == 0 && currentVal > 0 && current.bossrush == 0)
+		{
+			vars.DebugOutput("Arena complete " + kvp.Key + " split.");
+			return true;
+		}
+	}
 	
 	// Split on each scroll obtained if the appropriate setting is activated
 	foreach (KeyValuePair<string, MemoryWatcher> kvp in vars.scrollWatchers)
