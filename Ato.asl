@@ -1,4 +1,21 @@
 // Latest version should always be at top of file so it is default!
+state("Ato", "1.1.8.0")
+{
+	int room : 0x00DA1728;
+	double gameTimer : 0x00B91DE0, 0x48, 0x10, 0x6930, 0xE0;
+	double difficulty : 0x00B91DE0, 0x48, 0x10, 0x6930, 0x150;
+	double fileCreated : 0x00B91DE0, 0x48, 0x10, 0x6930, 0x1E0;
+	double phase : 0x00B91DE0, 0x48, 0x10, 0x6930, 0xD0;
+	double orb1 : 0x00B91DE0, 0x48, 0x10, 0x6930, 0x100, 0x08, 0x00;
+	double orb2 :0x00B91DE0, 0x48, 0x10, 0x6930, 0x100, 0x08, 0x10;
+	double orb3 : 0x00B91DE0, 0x48, 0x10, 0x6930, 0x100, 0x08, 0x20;
+	double win : 0x00B91DE0, 0x48, 0x10, 0x6930, 0x70, 0x08, 0x200;
+	double bossrush : 0x00B91DE0, 0x48, 0x10, 0x1000, 0x00;
+	double grasscut : 0x00B91DE0, 0x48, 0x10, 0x6930, 0x40;
+	double talismans :0x00B91DE0, 0x48, 0x10, 0x6930, 0x170;
+	double maxMP : 0x00B91DE0, 0x48, 0x10, 0x6930, 0x180;
+	double coinCount : 0x00B91DE0, 0x48, 0x10, 0x6930, 0x1C0;
+}
 state("Ato", "1.1.7.0")
 {
 	int room : 0x00D452D4;
@@ -474,6 +491,7 @@ startup
 	settings.Add("scroll_splits", false, "Scroll Splits");
 	settings.Add("arena_splits", false, "Arena Splits");
 	settings.Add("rune_splits", false, "Runes");
+	settings.Add("achievement_splits", false, "Splits for achievements");
 	settings.Add("misc_splits", true, "Misc. Splits");
 
 	settings.CurrentDefaultParent = "progression_splits";
@@ -548,7 +566,33 @@ startup
 	settings.Add("rune_3", true, "Juggernaut");
 	settings.Add("rune_4", true, "Flurry");
 	settings.Add("rune_5", true, "Risk");
-	 
+	
+	settings.CurrentDefaultParent = "achievement_splits";
+	settings.Add("achieve_foolishness", true, "FOOLISHNESS");
+	settings.Add("achieve_vendetta", true, "Vendetta");
+	settings.Add("achieve_was_it_worth_it", true, "Was it worth it?");
+	settings.Add("achieve_you_tried", true, "YOU TRIED");
+	settings.Add("achieve_because_its_there", true, "Because it's there");
+	settings.Add("achieve_parry", true, "Parry");
+	settings.Add("achieve_combo", true, "Combo");
+	settings.Add("achieve_counter", true, "Counter");
+	settings.Add("achieve_ewls", true, "Electric Wind Lethal Strike");
+	settings.Add("achieve_fatal_draw", true, "Fatal Draw");
+	settings.Add("achieve_masami", true, "Masami");
+	settings.Add("achieve_meiko", true, "Meiko");
+	settings.Add("achieve_shin", true, "Shin");
+	settings.Add("achieve_love", true, "Love");
+	settings.Add("achieve_geared_up", true, "Geared up");
+	settings.Add("achieve_warp_ten", true, "WarpTen");
+	settings.Add("achieve_crystal_break", true, "Crystal Break");
+	settings.Add("achieve_anti_crystal", true, "Anti-Crystal Policy");
+	settings.Add("achieve_bamboo_cut", true, "Bamboo Cut!");
+	settings.Add("achieve_hop_like_a", true, "Hop like a...");
+	settings.Add("achieve_survivor", true, "Survivor");
+	settings.Add("achieve_nice_try", true, "Nice Try");
+	settings.Add("achieve_okay_then", true, "Okay then...");
+	settings.Add("achieve_statue_park", true, "Statue Park");
+	
 	settings.CurrentDefaultParent = "misc_splits";
 	settings.Add("boss_rush", true, "Boss Rush");
 	settings.SetToolTip("boss_rush", "Split after each room is defeated in Boss Rush mode.");
@@ -601,6 +645,49 @@ startup
 			
 			var watcher = new MemoryWatcher<double>(new DeepPointer(baseOffset, currentOffsets));
 			dict.Add("arena_" + i.ToString(), watcher);
+		}
+		return dict;
+	});
+	vars.GetAchieveWatchers = (Func<int[], Dictionary<string, MemoryWatcher>>)((int[] achievementOffsets) => {
+		var dict = new Dictionary<string, MemoryWatcher>();
+		var achieveOffsets = new Dictionary<string, int>()
+		{
+			{ "achieve_foolishness", 0x250 },
+			{ "achieve_vendetta", 0x260 },
+			{ "achieve_was_it_worth_it", 0x270 },
+			{ "achieve_you_tried", 0x280 },
+			{ "achieve_because_its_there", 0x290 },
+			{ "achieve_parry", 0x2B0 },
+			{ "achieve_combo", 0x2D0 },
+			{ "achieve_counter", 0x2E0 },
+			{ "achieve_ewls", 0x300 },
+			{ "achieve_fatal_draw", 0x310 },
+			{ "achieve_masami", 0x320 },
+			{ "achieve_meiko", 0x330 },
+			{ "achieve_shin", 0x340 },
+			{ "achieve_love", 0x350 },
+			{ "achieve_geared_up", 0x390 },
+			{ "achieve_warp_ten", 0x430 },
+			{ "achieve_crystal_break", 0x440 },
+			{ "achieve_anti_crystal", 0x450 },
+			{ "achieve_bamboo_cut", 0x470 },
+			{ "achieve_hop_like_a", 0x480 },
+			{ "achieve_survivor", 0x490 },
+			{ "achieve_nice_try", 0x4A0 },
+			{ "achieve_okay_then", 0x4B0 },
+			{ "achieve_statue_park", 0x510 }
+		};
+		var baseOffset = achievementOffsets[0];
+		foreach (KeyValuePair<string, int> kvp in achieveOffsets)
+		{
+			// Copy the offsets minus the first one and append the offset for the individual ability
+			int[] currentOffsets = new int[achievementOffsets.Length];
+			Array.Copy(achievementOffsets, 1, currentOffsets, 0, achievementOffsets.Length - 1);
+			currentOffsets[currentOffsets.Length - 1] = kvp.Value;
+			
+			// vars.DebugOutput("All offsets: " + string.Join(", ", Array.ConvertAll(currentOffsets, off => off.ToString())));
+			var watcher = new MemoryWatcher<double>(new DeepPointer(baseOffset, currentOffsets));
+			dict.Add(kvp.Key, watcher);
 		}
 		return dict;
 	});
@@ -767,10 +854,15 @@ init
 		case "1.1.5.0":
 		case "1.1.6.0":
 		case "1.1.7.0":
-		default:
 			abilityOffsets = new int[] {0x00B35220, 0x48, 0x10, 0x6A20, 0x140, 0x90};
 			achievementOffsets = new int[] {0x00B35220, 0x48, 0x10, 0x6A20, 0x70, 0x90};
 			runeOffsets = new int[] {0x00B35220, 0x48, 0x10, 0x6A20, 0xA0, 0x90};
+			break;
+		case "1.1.8.0":
+		default:
+			abilityOffsets = new int[] {0x00B91DE0, 0x48, 0x10, 0x6930, 0x140, 0x08};
+			achievementOffsets = new int[] {0x00B91DE0, 0x48, 0x10, 0x6930, 0x70, 0x08};
+			runeOffsets = new int[] {0x00B91DE0, 0x48, 0x10, 0x6930, 0xA0, 0x08};
 			break;
 	}
 	
@@ -778,6 +870,8 @@ init
 	vars.DebugOutput("Boss watcher count: " + vars.bossWatchers.Count.ToString());
 	vars.arenaWatchers = vars.GetArenaWatchers(achievementOffsets);
 	vars.DebugOutput("Arena watcher count: " + vars.arenaWatchers.Count.ToString());
+	vars.achieveWatchers = vars.GetAchieveWatchers(achievementOffsets);
+	vars.DebugOutput("Achievement watcher count: " + vars.achieveWatchers.Count.ToString());
 	vars.scrollWatchers = vars.GetScrollWatchers(abilityOffsets);
 	vars.DebugOutput("Scroll watcher count: " + vars.scrollWatchers.Count.ToString());
 	vars.runeWatchers = vars.GetRuneWatchers(runeOffsets);
@@ -816,6 +910,10 @@ update
 	{
 		currentWatcher.Value.Update(game);
 	}
+	foreach (var currentWatcher in vars.achieveWatchers)
+	{
+		currentWatcher.Value.Update(game);
+	}
 	foreach (var currentWatcher in vars.scrollWatchers)
 	{
 		currentWatcher.Value.Update(game);
@@ -835,8 +933,8 @@ start
 		vars.DebugOutput("Game Timer: " + current.gameTimer.ToString());
 		if (current.gameTimer < 60 || current.bossrush == 1)
 		{
-      vars.DebugOutput("Timer started");
-      return true;
+			vars.DebugOutput("Timer started");
+			return true;
 		}
 	}
 }
@@ -848,7 +946,7 @@ reset
 	if (
 		(current.bossrush == 1 && old.bossrush == 0 && vars.savedTime != 0) ||
 		(current.difficulty == 5 && vars.savedTime != 0 && current.room >= vars.introRoom && old.room == vars.menuRoom) ||
-    (current.fileCreated == 0 && current.room == vars.menuRoom)
+		(current.fileCreated == 0 && current.room == vars.menuRoom)
 	)
 	{
 		return timer.CurrentPhase == TimerPhase.Running || timer.CurrentPhase == TimerPhase.Paused;
@@ -858,8 +956,8 @@ reset
 
 onReset
 {
-  vars.DebugOutput("Timer reset");
-  vars.savedTime = 0;
+	vars.DebugOutput("Timer reset");
+	vars.savedTime = 0;
 }
 
 split
@@ -948,8 +1046,8 @@ split
 			return true;
 		}
 	}
-  
-  // Split on each arena complete if the appropriate setting is activated
+	
+	// Split on each arena complete if the appropriate setting is activated
 	foreach (KeyValuePair<string, MemoryWatcher> kvp in vars.arenaWatchers)
 	{
 		double oldVal = kvp.Value.Old == null ? 0d : (double)kvp.Value.Old;
@@ -957,6 +1055,18 @@ split
 		if (settings[kvp.Key] && oldVal == 0 && currentVal > 0 && current.bossrush == 0)
 		{
 			vars.DebugOutput("Arena complete " + kvp.Key + " split.");
+			return true;
+		}
+	}
+	
+	// Split on achievement complete if the appropriate setting is activated
+	foreach (KeyValuePair<string, MemoryWatcher> kvp in vars.achieveWatchers)
+	{
+		double oldVal = kvp.Value.Old == null ? 0d : (double)kvp.Value.Old;
+		double currentVal = kvp.Value.Current == null ? 0d : (double)kvp.Value.Current;
+		if (settings[kvp.Key] && oldVal == 0 && currentVal > 0)
+		{
+			vars.DebugOutput("Achievement complete " + kvp.Key + " split.");
 			return true;
 		}
 	}
@@ -988,7 +1098,7 @@ split
 
 isLoading
 {
-    return current.room <= vars.introRoom;
+		return current.room <= vars.introRoom;
 }
 
 gameTime
