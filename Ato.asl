@@ -519,6 +519,7 @@ startup
 
 	// SETTINGS
 	settings.Add("autostart", true, "Auto-start when starting a new file.");
+	settings.Add("multi_file", false, "Multi-file (Use this only when running a category that uses multiple files, such as all achievements.)");
 	
 	settings.Add("progression_splits", true, "Progression Splits");
 	settings.Add("boss_splits", false, "Boss Splits (Excluding final boss)");
@@ -780,6 +781,14 @@ startup
 	// Important room numbers for splitting
 	vars.menuRoom = 5;
 	vars.introRoom = 6;
+  
+	// When using multifile, the same split should not be triggered twice. Keep a cache of which achievement splits that have been hit.
+	var splitCache = new Dictionary<int, bool>();
+	// Initialize each offset with a value of false. There are only 86 but there are a few addresses which are unused.
+	for (int i = 0; i <= 91; i++)
+	{
+		splitCache.Add(0x10 * i, false);
+	}
 }
 
 init
@@ -1150,12 +1159,20 @@ gameTime
 		return TimeSpan.FromMilliseconds(vars.savedTime);
 	}
 
-	// gameTime is frames rendered. Game runs at 60 fps
 	double ms = current.gameTimer * (1000d / 60d);
 	double oldMs = old.gameTimer * (1000d / 60d);
 	if (ms > oldMs)
 	{
-		vars.savedTime = ms;
+		// When using multi-file, gameTime is frames rendered. Game runs at 60 fps
+		// Otherwise, sync with the in-game timer.
+		if (settings["multi_file"])
+		{
+			vars.savedTime += ms - oldMs;
+		}
+		else
+		{
+			vars.savedTime = ms;
+		}
 	}
 
 	// Game display rounds up to the nearest hundredth, although a frame is much longer
