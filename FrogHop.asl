@@ -1,5 +1,5 @@
 // Latest version should always be at top of file so it is default!
-state("Froghop", "2.5.3.0")
+state("Froghop", "2.5.4.0")
 {
 	int room : 0x009FC414;
 	double gameTimer : 0x0076CA40, 0x48, 0x10, 0x260, 0x00;
